@@ -14,6 +14,10 @@ app.use(express.json());
 // MongoDB Docs
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.gqz9f.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
+
+// DB_USER=moviePortal
+// DB_PASS=7zDEArc8BdHRaEQ8
+
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
