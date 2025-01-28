@@ -63,7 +63,19 @@ async function run() {
       }
     });
 
-
+    app.delete("/movies/:id", async (req, res) => {
+      const id = req.params.id;
+      try {
+        const result = await movieCollection.deleteOne({ _id: new ObjectId(id) });
+        if (result.deletedCount > 0) {
+          res.status(200).send(result);
+        } else {
+          res.status(404).send({ message: "No movie found with that ID" });
+        }
+      } catch (error) {
+        res.status(500).send({ error: "Internal Server Error" });
+      }
+    });
     
 
     // Send a ping to confirm a successful connection
