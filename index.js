@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 const app = express();
@@ -37,6 +37,21 @@ async function run() {
       res.send(result);
     })
 
+    app.get("/movies/:id", async (req, res) => {
+      const id = req.params.id;
+      try {
+        const movie = await movieCollection.findOne({ _id: new ObjectId(id) });
+        if (movie) {
+          res.status(200).send(movie);
+        } else {
+          res.status(404).send({ message: "Movie not found" });
+        }
+      } catch (error) {
+        res.status(500).send({ error: "Internal Server Error" });
+      }
+    });
+    
+    
     app.post("/movies", async (req, res) => {
       const movie = req.body;
       try {
@@ -48,6 +63,8 @@ async function run() {
       }
     });
 
+
+    
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
