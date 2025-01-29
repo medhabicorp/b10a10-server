@@ -52,9 +52,16 @@ async function run() {
       }
     });
 
+    // Fetch all favorites
+    app.get('/favorites', async (req, res) => {
+      const cursor = favoritesCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
-// Get favorites for a specific user
-app.get("/favorites/:email", async (req, res) => {
+
+    // Get favorites for a specific user
+    app.get("/favorites/:email", async (req, res) => {
   try {
     const userEmail = req.params.email;
 
@@ -68,11 +75,23 @@ app.get("/favorites/:email", async (req, res) => {
     console.error("Error fetching favorites:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+      });
 
 
-// // Add a movie to favorites
-app.post("/favorites", async (req, res) => {
+    // Add a new movie
+    app.post('/movies', async (req, res) => {
+      const movie = req.body;
+      try {
+        const result = await client.db('movieDB').collection('movies').insertOne(movie);
+        res.send(result);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send({ success: false, message: 'Internal server error.' });
+      }
+    });
+
+      // Add a movie to favorites
+    app.post("/favorites", async (req, res) => {
   try {
     const favoriteMovie = req.body;
 
@@ -98,11 +117,11 @@ app.post("/favorites", async (req, res) => {
     console.error("Error adding favorite:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+    });
 
 
-// Delete a favorite movie for a specific user
-app.delete("/favorites/:id", async (req, res) => {
+    // Delete a favorite movie for a specific user
+    app.delete("/favorites/:id", async (req, res) => {
   try {
     const movieId = req.params.id;
     const userEmail = req.query.email; // User's email passed as a query parameter
@@ -125,22 +144,6 @@ app.delete("/favorites/:id", async (req, res) => {
     console.error("Error deleting favorite:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
-
-
-    
-    
-
-    // Add a new movie
-    app.post('/movies', async (req, res) => {
-      const movie = req.body;
-      try {
-        const result = await client.db('movieDB').collection('movies').insertOne(movie);
-        res.send(result);
-      } catch (error) {
-        console.error(error);
-        res.status(500).send({ success: false, message: 'Internal server error.' });
-      }
     });
 
     // Delete a movie by ID
