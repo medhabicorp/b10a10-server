@@ -62,7 +62,7 @@ async function run() {
 
     // Get favorites for a specific user
     app.get("/favorites/:email", async (req, res) => {
-  try {
+    try {
     const userEmail = req.params.email;
 
     if (!userEmail) {
@@ -71,11 +71,25 @@ async function run() {
 
     const userFavorites = await favoritesCollection.find({ userEmail }).toArray();
     res.status(200).json(userFavorites);
-  } catch (error) {
+    } catch (error) {
     console.error("Error fetching favorites:", error);
     res.status(500).json({ message: "Internal Server Error" });
-  }
+    }
       });
+
+      // Update a movie by ID
+// Update a movie by ID
+app.put('/movies/:id', async (req, res) => {
+  const id = req.params.id;
+  const updatedMovie = req.body;
+
+  const result = await movieCollection.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: updatedMovie }
+  );
+
+  res.send(result);
+});
 
 
     // Add a new movie
