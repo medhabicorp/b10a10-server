@@ -32,10 +32,12 @@ async function run() {
 
     // Fetch all movies
     app.get('/movies', async (req, res) => {
-      const cursor = movieCollection.find();
+      const limit = parseInt(req.query.limit) || 0; 
+      const cursor = limit > 0 ? movieCollection.find().limit(limit) : movieCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
+    
 
     // Fetch a specific movie by ID
     app.get('/movies/:id', async (req, res) => {
