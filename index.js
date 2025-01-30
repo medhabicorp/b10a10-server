@@ -78,18 +78,17 @@ async function run() {
       });
 
       // Update a movie by ID
-// Update a movie by ID
-app.put('/movies/:id', async (req, res) => {
-  const id = req.params.id;
-  const updatedMovie = req.body;
+    app.put('/movies/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedMovie = req.body;
 
-  const result = await movieCollection.updateOne(
-    { _id: new ObjectId(id) },
-    { $set: updatedMovie }
-  );
+      const result = await movieCollection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updatedMovie }
+    );
 
-  res.send(result);
-});
+      res.send(result);
+    });
 
 
     // Add a new movie
@@ -140,9 +139,6 @@ app.put('/movies/:id', async (req, res) => {
     const movieId = req.params.id;
     const userEmail = req.query.email; // User's email passed as a query parameter
 
-    if (!movieId || !userEmail) {
-      return res.status(400).json({ message: "Movie ID and user email are required" });
-    }
 
     const result = await favoritesCollection.deleteOne({
       _id: movieId,
